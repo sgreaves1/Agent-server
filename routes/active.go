@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/sgreaves1/Agent-server/routes"
+	"github.com/sgreaves1/Agent-server/helpers"
 )
 
 func GetActiveHandler(w http.ResponseWriter, r *http.Request) {
