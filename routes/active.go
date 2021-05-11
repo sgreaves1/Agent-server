@@ -10,7 +10,7 @@ import (
 )
 
 func GetActiveHandler(w http.ResponseWriter, r *http.Request) {
-	activeElements := helpers.GetActiveInfo()
+	activeElements := helpers.GetAssets()
 
 	if activeElements != nil {
 		w.Header().Set("Content-Type", "application/json")
@@ -20,6 +20,10 @@ func GetActiveHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusNoContent)
 	}
+}
+
+type Body struct {
+	Location string
 }
 
 func AssetByIdHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +42,22 @@ func AssetByIdHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusNoContent)
 		}
 	case "PATCH":
-		fmt.Fprint(w, "Will update!")
+		var l Body
+		err := json.NewDecoder(r.Body).Decode(&l)
+		if err == nil {
+			activeAsset := helpers.GetAssetById(id)
+			if activeAsset != nil {
+				helpers.UpdateAssetLocation(id, l.Location)
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+			} else {
+				w.WriteHeader(http.StatusNoContent)
+			}
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+
 	default:
 		fmt.Fprintf(w, "Sorry, only GET and PATCH methods are supported.")
 	}
