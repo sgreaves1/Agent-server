@@ -11,6 +11,7 @@ func main() {
 
 	http.HandleFunc("/liveness", routes.LivenessRoute)
 	http.HandleFunc("/active", routes.GetActiveHandler)
+	http.HandleFunc("/asset/", routes.AssetByIdHandler)
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d",7621), nil)
 
